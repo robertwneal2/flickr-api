@@ -1,11 +1,14 @@
 class StaticPagesController < ApplicationController
   def index
     if search_params[:commit]
-      @flickr = flickr = Flickr.new ENV["flickr_key"], ENV["flickr_secret"]
-      if @flickr
-        @flickr_id = search_params[:flickr_id]
+      @flickr_username = search_params[:flickr_username]
+      if @flickr_username == ""
+        @error = "Username cannot be blank"
+      else
         begin
-          photos = @flickr.people.getPhotos(user_id: @flickr_id)
+          flickr = Flickr.new ENV["flickr_key"], ENV["flickr_secret"]
+          flickr_id = flickr.people.findByUsername(username: @flickr_username)["id"]
+          photos = flickr.people.getPhotos(user_id: flickr_id)
           @photo_urls = []
           photos.each do |photo|
             server_id = photo.server
@@ -15,13 +18,13 @@ class StaticPagesController < ApplicationController
             @photo_urls << url
           end
         rescue
-          @user_not_found = true
+          @error = "Username not found"
         end
       end
     end
   end
 
   def search_params
-    params.permit(:commit, :flickr_id)
+    params.permit(:commit, :flickr_username)
   end
 end
