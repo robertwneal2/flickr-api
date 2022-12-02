@@ -1,1 +1,20 @@
-Hello world
+<%= form_with(url: "/static_pages", method: "get") do%>
+  <%= label(:flickr_id, "Flickr id:") %>
+  <%= text_field_tag(:flickr_id, @flickr_id) %>
+  <%= submit_tag("Search for Photos") %>
+<% end %>
+
+<% if @flickr %>
+  <% if @user_not_found %>
+    <%= "Flickr user id: #{@flickr_id} not found!"%>
+  <% else %>
+    <%= "Flickr user id: #{@flickr_id} photos:" %>
+    <p>
+      <% @photo_urls.each do |photo_url| %>
+        <p>
+          <%= image_tag(photo_url) %>
+        </p>
+      <% end %>
+    </p>
+  <% end %>
+<% end %>
