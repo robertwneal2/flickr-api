@@ -1,14 +1,14 @@
 <%= form_with(url: "/static_pages", method: "get") do%>
-  <%= label(:flickr_username, "Flickr username:") %>
-  <%= text_field_tag(:flickr_username, @flickr_username) %>
+  <%= label(:flickr_id, "Flickr id:") %>
+  <%= text_field_tag(:flickr_id, @flickr_id) %>
   <%= submit_tag("Search for Photos") %>
 <% end %>
 
-<% if @flickr_username %>
-  <% if @error %>
-    <%= @error %>
+<% if @flickr %>
+  <% if @user_not_found %>
+    <%= "Flickr user id: #{@flickr_id} not found!"%>
   <% else %>
-    <%= "#{@flickr_username} Flickr photos:" %>
+    <%= "Flickr user id: #{@flickr_id} photos:" %>
     <p>
       <% @photo_urls.each do |photo_url| %>
         <p>
